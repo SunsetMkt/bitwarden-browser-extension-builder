@@ -48,15 +48,10 @@ jobs:
 
       - name: Upload Chrome artifact
         uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+        continue-on-error: true
         with:
           path: clients/apps/browser/dist/dist-chrome.zip
           name: dist-chrome
-
-      - name: Upload Edge artifact
-        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
-        with:
-          path: clients/apps/browser/dist/dist-edge.zip
-          name: dist-edge
 
       - name: Upload dist folder
         uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
@@ -66,8 +61,10 @@ jobs:
 
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@361a23fcf94a523a91c9cfae6f11c2a5c2d87f64 # v1
+        continue-on-error: true
 
       - name: Pack Chrome Extension
+        continue-on-error: true
         env:
           PACK_EXTENSION_KEY: ${{ secrets.PACK_EXTENSION_KEY }}
         run: |
@@ -76,12 +73,14 @@ jobs:
 
       - name: Upload Chrome Extension
         uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+        continue-on-error: true
         with:
           path: clients/apps/browser/dist/dist-chrome.crx
           name: dist-chrome-crx
 
       - name: Upload Release
         uses: marvinpinto/action-automatic-releases@d68defdd11f9dcc7f52f35c1b7c236ee7513bcc1 # Last commit before archived
+        continue-on-error: true
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "latest"
