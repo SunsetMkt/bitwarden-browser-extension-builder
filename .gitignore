@@ -1,3 +1,6 @@
+# Setup Repo
+clients/*
+
 # Logs
 logs
 *.log
