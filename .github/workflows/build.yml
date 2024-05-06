@@ -4,6 +4,10 @@ name: Build
 
 on:
   workflow_dispatch:
+  push:
+    branches: [master, main]
+
+permissions: write-all
 
 defaults:
   run:
@@ -59,3 +63,11 @@ jobs:
         with:
           path: clients/apps/browser/dist/
           name: dist
+
+      - uses: marvinpinto/action-automatic-releases@d68defdd11f9dcc7f52f35c1b7c236ee7513bcc1 # Last commit before archived
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          title: "Latest Workflow Output"
+          files: |
+            clients/apps/browser/dist/*
