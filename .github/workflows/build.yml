@@ -10,30 +10,9 @@ defaults:
     shell: bash
 
 jobs:
-  setup:
-    name: Setup
-    runs-on: ubuntu-22.04
-    outputs:
-      node_version: ${{ steps.retrieve-node-version.outputs.node_version }}
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
-
-      - name: Get Node Version
-        id: retrieve-node-version
-        working-directory: ./
-        run: |
-          NODE_NVMRC=$(cat .nvmrc)
-          NODE_VERSION=${NODE_NVMRC/v/''}
-          echo "node_version=$NODE_VERSION" >> $GITHUB_OUTPUT
-
   build:
     name: Build
     runs-on: ubuntu-22.04
-    needs:
-      - setup
-    env:
-      _NODE_VERSION: ${{ needs.setup.outputs.node_version }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
@@ -41,9 +20,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
-          cache: 'npm'
-          cache-dependency-path: '**/package-lock.json'
-          node-version: ${{ env._NODE_VERSION }}
+          node-version: "v18" # See .nvmrc
 
       - name: Print environment
         run: |
