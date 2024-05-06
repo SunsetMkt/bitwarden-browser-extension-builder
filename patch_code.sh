@@ -1,12 +1,11 @@
 #!/bin/bash
-patch_file="fakePremium.patch"
+# To create a patch, git diff > mypatch.patch
 repo_dir="clients"
 
-cp "$patch_file" "$repo_dir"
+cp fakePremium.patch "$repo_dir"
+cp patchAbout.patch "$repo_dir"
 
 cd "$repo_dir"
 
-echo "Apply Patch:"
-cat "$patch_file"
-
-git apply "$patch_file"
+git apply fakePremium.patch -v
+git apply patchAbout.patch -v || true # ignore error
