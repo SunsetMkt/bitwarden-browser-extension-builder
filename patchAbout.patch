@@ -1,5 +1,5 @@
 diff --git a/apps/browser/src/popup/settings/about.component.html b/apps/browser/src/popup/settings/about.component.html
-index e68a664ba7..8ed532e622 100644
+index a4ad0ba801..8d8893ed60 100644
 --- a/apps/browser/src/popup/settings/about.component.html
 +++ b/apps/browser/src/popup/settings/about.component.html
 @@ -2,7 +2,7 @@
@@ -10,4 +10,4 @@ index e68a664ba7..8ed532e622 100644
 +  <div bitDialogTitle>Bitwarden with Fake Premium Patch</div>
    <div bitDialogContent>
      <p>&copy; Bitwarden Inc. 2015-{{ year }}</p>
-     <p>{{ "version" | i18n }}: {{ version$ | async }}</p>
+     <p>{{ "version" | i18n }}: {{ version }}</p>
