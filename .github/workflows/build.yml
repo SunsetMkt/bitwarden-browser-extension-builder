@@ -64,7 +64,24 @@ jobs:
           path: clients/apps/browser/dist/
           name: dist
 
-      - uses: marvinpinto/action-automatic-releases@d68defdd11f9dcc7f52f35c1b7c236ee7513bcc1 # Last commit before archived
+      - name: Setup Chrome
+        uses: browser-actions/setup-chrome@361a23fcf94a523a91c9cfae6f11c2a5c2d87f64 # v1
+
+      - name: Pack Chrome Extension
+        env:
+          PACK_EXTENSION_KEY: ${{ secrets.PACK_EXTENSION_KEY }}
+        run: |
+          chmod +x pack_extension.sh
+          ./pack_extension.sh
+
+      - name: Upload Chrome Extension
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+        with:
+          path: clients/apps/browser/dist/dist-chrome.crx
+          name: dist-chrome-crx
+
+      - name: Upload Release
+        uses: marvinpinto/action-automatic-releases@d68defdd11f9dcc7f52f35c1b7c236ee7513bcc1 # Last commit before archived
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "latest"
