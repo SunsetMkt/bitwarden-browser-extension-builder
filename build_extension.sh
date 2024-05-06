@@ -6,8 +6,8 @@ cd clients/apps/browser
 # Build
 npm run dist
 # Build Manifest v3
-npm run dist:mv3
+npm run dist:mv3 || true # ignore error
 # Build Chrome Manifest v3 Beta
-npm run dist:chrome:beta
+# npm run dist:chrome:beta # Not for prod
 # Gulp
 gulp ci
