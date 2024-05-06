@@ -1,0 +1,15 @@
+diff --git a/libs/common/src/billing/services/account/billing-account-profile-state.service.ts b/libs/common/src/billing/services/account/billing-account-profile-state.service.ts
+index cf05df2f22..ccb4fec8c8 100644
+--- a/libs/common/src/billing/services/account/billing-account-profile-state.service.ts
++++ b/libs/common/src/billing/services/account/billing-account-profile-state.service.ts
+@@ -65,8 +65,8 @@ export class DefaultBillingAccountProfileStateService implements BillingAccountP
+   ): Promise<void> {
+     await this.billingAccountProfileState.update((billingAccountProfile) => {
+       return {
+-        hasPremiumPersonally: hasPremiumPersonally,
+-        hasPremiumFromAnyOrganization: hasPremiumFromAnyOrganization,
++        hasPremiumPersonally: true,
++        hasPremiumFromAnyOrganization: true,
+       };
+     });
+   }

@@ -17,22 +17,39 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
+      - name: Setup repo
+        run: |
+          chmod +x setup_repo.sh
+          ./setup_repo.sh
+
+      - name: Get Node Version
+        id: retrieve-node-version
+        working-directory: ./clients/
+        run: |
+          NODE_NVMRC=$(cat .nvmrc)
+          NODE_VERSION=${NODE_NVMRC/v/''}
+          echo "node_version=$NODE_VERSION" >> $GITHUB_ENV
+
       - name: Set up Node
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
-          node-version: "v18" # See .nvmrc
+          node-version: $node_version
 
       - name: Print environment
         run: |
           node --version
           npm --version
 
-      - name: Run scripts
+      - name: Apply patch
         run: |
-          ./setup_repo.sh
+          chmod +x patch_code.sh
           ./patch_code.sh
-          ./build_extension.sh
 
+      - name: Build
+        run: |
+          chmod +x build_extension.sh
+          ./build_extension.sh
+          
       - name: Upload Chrome artifact
         uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
         with:
