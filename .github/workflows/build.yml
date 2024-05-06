@@ -17,23 +17,15 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
+      - name: Set up Node
+        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
+        with:
+          node-version: 18 # See .nvmrc
+
       - name: Setup repo
         run: |
           chmod +x setup_repo.sh
           ./setup_repo.sh
-
-      - name: Get Node Version
-        id: retrieve-node-version
-        working-directory: ./clients/
-        run: |
-          NODE_NVMRC=$(cat .nvmrc)
-          NODE_VERSION=${NODE_NVMRC/v/''}
-          echo "NODE_VERSION=$NODE_VERSION" >> $GITHUB_ENV
-
-      - name: Set up Node
-        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
-        with:
-          node-version: ${{ env.NODE_VERSION }}
 
       - name: Print environment
         run: |
@@ -49,18 +41,21 @@ jobs:
         run: |
           chmod +x build_extension.sh
           ./build_extension.sh
-          
+
       - name: Upload Chrome artifact
         uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
         with:
           path: clients/apps/browser/dist/dist-chrome.zip
+          name: dist-chrome
 
       - name: Upload Edge artifact
         uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
         with:
           path: clients/apps/browser/dist/dist-edge.zip
+          name: dist-edge
 
       - name: Upload dist folder
         uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
         with:
           path: clients/apps/browser/dist/
+          name: dist
