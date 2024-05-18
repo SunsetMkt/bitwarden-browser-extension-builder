@@ -6,6 +6,9 @@ on:
   workflow_dispatch:
   push:
     branches: [master, main]
+  schedule:
+    # On every Sunday 12:00
+    - cron: "0 12 * * 0"
 
 permissions: write-all
 
@@ -88,3 +91,9 @@ jobs:
           title: "Latest Workflow Output"
           files: |
             clients/apps/browser/dist/*
+
+      - name: Push Changes
+        run: |
+          git add .
+          git commit -m "Build: $(date +%Y-%m-%d_%H-%M-%S)"
+          git push

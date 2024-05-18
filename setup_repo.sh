@@ -16,6 +16,24 @@ for tag in $tags; do
         break
     fi
 done
+
+# Read last browser tag from a file
+if [ -f last_browser_tag.txt ]; then
+    last_browser_tag=$(cat last_browser_tag.txt)
+    echo "Last browser tag: $last_browser_tag"
+    echo "Latest browser tag: $latest_browser_tag"
+    if [ "$last_browser_tag" == "$latest_browser_tag" ]; then
+        echo "No new browser tag found"
+        exit 1
+    fi
+    echo "New browser tag found: $latest_browser_tag"
+else
+    last_browser_tag=""
+fi
+
+# Write the latest browser tag to a file
+echo "$latest_browser_tag" > last_browser_tag.txt
+
 echo "Go back to $latest_browser_tag"
 git checkout $latest_browser_tag
 
