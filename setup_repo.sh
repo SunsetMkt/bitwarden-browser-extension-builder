@@ -18,8 +18,8 @@ for tag in $tags; do
 done
 
 # Read last browser tag from a file
-if [ -f last_browser_tag.txt ]; then
-    last_browser_tag=$(cat last_browser_tag.txt)
+if [ -f ../last_browser_tag.txt ]; then
+    last_browser_tag=$(cat ../last_browser_tag.txt)
     echo "Last browser tag: $last_browser_tag"
     echo "Latest browser tag: $latest_browser_tag"
     if [ "$last_browser_tag" == "$latest_browser_tag" ]; then
@@ -33,7 +33,7 @@ else
 fi
 
 # Write the latest browser tag to a file
-echo "$latest_browser_tag" > last_browser_tag.txt
+echo "$latest_browser_tag" > ../last_browser_tag.txt
 echo "Last browser tag: $latest_browser_tag"
 
 echo "Go back to $latest_browser_tag"
