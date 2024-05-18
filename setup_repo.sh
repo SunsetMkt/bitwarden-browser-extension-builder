@@ -29,10 +29,12 @@ if [ -f last_browser_tag.txt ]; then
     echo "New browser tag found: $latest_browser_tag"
 else
     last_browser_tag=""
+    echo "No last browser tag found"
 fi
 
 # Write the latest browser tag to a file
 echo "$latest_browser_tag" > last_browser_tag.txt
+echo "Last browser tag: $latest_browser_tag"
 
 echo "Go back to $latest_browser_tag"
 git checkout $latest_browser_tag

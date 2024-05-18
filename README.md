@@ -8,6 +8,6 @@ The main patched file is `background.js`, check diff with the latest stable offi
 
 **For beginners, it's always recommended to use the latest official build of your password manager.**
 
-[Check latest build for Edge V3.](https://github.com/lwd-temp/bitwarden-browser-extension-builder/releases/download/latest/dist-edge-mv3.zip) To load the built extension, [Load an unpacked extension](https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world#load-unpacked) or [Self-hosting Chromium extensions](https://www.meziantou.net/self-hosting-chromium-extensions.htm).
+[Check latest build for Edge V3.](dist-edge-mv3.zip) To load the built extension, [Load an unpacked extension](https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world#load-unpacked) or [Self-hosting Chromium extensions](https://www.meziantou.net/self-hosting-chromium-extensions.htm).
 
 [Buy Bitwarden Premium Today!](https://bitwarden.com/pricing/)

@@ -85,6 +85,19 @@ jobs:
       #     path: clients/apps/browser/dist/dist-chrome.crx
       #     name: dist-chrome-crx
 
+      - name: Push Changes
+        continue-on-error: true
+        run: |
+          # Copy dist
+          cp clients/apps/browser/dist/dist-edge-mv3.zip .
+          # Set up git config
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          # Push changes
+          git add .
+          git commit -m "Build: $(date +%Y-%m-%d_%H-%M-%S)"
+          git push
+
       - name: Upload Release
         uses: marvinpinto/action-automatic-releases@d68defdd11f9dcc7f52f35c1b7c236ee7513bcc1 # Last commit before archived
         continue-on-error: true
@@ -95,12 +108,3 @@ jobs:
           title: "Latest Workflow Output"
           files: |
             clients/apps/browser/dist/*
-
-      - name: Push Changes
-        continue-on-error: true
-        run: |
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add .
-          git commit -m "Build: $(date +%Y-%m-%d_%H-%M-%S)"
-          git push
