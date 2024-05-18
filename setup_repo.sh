@@ -24,6 +24,8 @@ if [ -f ../last_browser_tag.txt ]; then
     echo "Latest browser tag: $latest_browser_tag"
     if [ "$last_browser_tag" == "$latest_browser_tag" ]; then
         echo "No new browser tag found"
+        cd ..
+        mv clients stopped_clients
         exit 1
     fi
     echo "New browser tag found: $latest_browser_tag"
