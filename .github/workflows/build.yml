@@ -62,6 +62,12 @@ jobs:
           path: clients/apps/browser/dist/
           name: dist
 
+      - name: Upload src folder
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+        with:
+          path: clients/apps/browser/
+          name: src
+
       # - name: Setup Chrome
       #   uses: browser-actions/setup-chrome@361a23fcf94a523a91c9cfae6f11c2a5c2d87f64 # v1
       #   continue-on-error: true
@@ -84,7 +90,7 @@ jobs:
       - name: Push Changes
         run: |
           # Copy dist
-          cp clients/apps/browser/dist/dist-edge-mv3.zip .
+          # cp clients/apps/browser/dist/dist-edge-mv3.zip .
           # Set up git config
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
