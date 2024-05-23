@@ -10,6 +10,16 @@ orig["homepage_url"] = "https://github.com/lwd-temp/bitwarden-browser-extension-
 orig["action"]["default_title"] = "Sunsetwarden"
 orig["sidebar_action"]["default_title"] = "Sunsetwarden"
 orig["applications"]["gecko"]["id"] = "{096091b7-0c7a-4e9e-a7c2-b9aed40cd430}"
+orig["description"] = (
+    "Sunsetwarden is an exclusive build of the popular password manager Bitwarden, designed for members of the Sunset Edu. & Tech. Group. Join us to access this specialized extension."
+)
+orig["icons"] = {
+    "16": "images/icon16_gray.png",
+    "32": "images/icon32_gray.png",
+    "48": "images/icon48_gray.png",
+    "96": "images/icon96_gray.png",
+    "128": "images/icon128_gray.png",
+}
 
 with open("clients/apps/browser/src/manifest.v3.json", "w", encoding="utf-8") as f:
     json.dump(orig, f, indent=2)
