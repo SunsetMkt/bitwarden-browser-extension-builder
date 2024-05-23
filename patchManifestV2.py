@@ -11,7 +11,7 @@ orig["browser_action"]["default_title"] = "Sunsetwarden"
 orig["sidebar_action"]["default_title"] = "Sunsetwarden"
 orig["applications"]["gecko"]["id"] = "{bc4d86b4-6996-40b9-b15f-aba0d3fedbf4}"
 orig["description"] = (
-    "Sunsetwarden is an exclusive build of the popular password manager Bitwarden, designed for members of the Sunset Edu. & Tech. Group. Join us to access this specialized extension."
+    "Sunsetwarden is an exclusive build of the popular password manager Bitwarden, designed for internal use by SETG."
 )
 orig["icons"] = {
     "16": "images/icon16_gray.png",
