@@ -14,8 +14,4 @@ To load the built extension, [Load an unpacked extension](https://developer.chro
 
 Sunsetwarden is an exclusive build of the popular password manager Bitwarden, designed for internal use by SETG.
 
-## Important Notice
-
-This extension is for internal use only and should not be used by the public. The server it connects to is located on an internal network and is not accessible from the public internet.
-
-Using this extension outside of its intended environment may result in errors or unexpected behavior. Please do not install or use this extension unless you are authorized to do so.
+This extension is designed for internal use but still may be used by the public. The user must have a Bitwarden server to connect to because our server is not accessible from the internet. However, it's strongly recommended to use the official build of Bitwarden if you are not a member of the team.
