@@ -9,7 +9,7 @@ orig["author"] = "Sunset Edu. & Tech. Group and Bitwarden Inc."
 orig["homepage_url"] = "https://github.com/lwd-temp/bitwarden-browser-extension-builder"
 orig["action"]["default_title"] = "Sunsetwarden"
 orig["sidebar_action"]["default_title"] = "Sunsetwarden"
-orig["applications"]["gecko"]["id"] = "{096091b7-0c7a-4e9e-a7c2-b9aed40cd430}"
+orig["applications"]["gecko"]["id"] = "{bc4d86b4-6996-40b9-b15f-aba0d3fedbf4}"
 orig["description"] = (
     "Sunsetwarden is an exclusive build of the popular password manager Bitwarden, designed for members of the Sunset Edu. & Tech. Group. Join us to access this specialized extension."
 )
