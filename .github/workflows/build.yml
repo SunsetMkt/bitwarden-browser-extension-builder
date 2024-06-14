@@ -27,7 +27,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
-          node-version: 18 # See .nvmrc
+          node-version: 20 # See .nvmrc # https://github.com/bitwarden/clients/blob/main/.nvmrc
 
       - name: Setup repo
         run: |
