@@ -1,1 +1,1 @@
-browser-v2024.5.2
+browser-v2024.6.0
