@@ -125,9 +125,11 @@ jobs:
 
       - name: Apply internal patch
         run: |
-          #!/bin/bash
           # To create a patch, git diff > mypatch.patch
           repo_dir="clients"
+          patches_dir="patches"
+
+          cp -r "$patches_dir" .
 
           cp fakePremium.patch "$repo_dir"
 
