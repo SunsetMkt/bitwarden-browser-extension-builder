@@ -1,9 +1,5 @@
 # Setup Repo
 clients
-# Pack Temp
-ext_tmp
-ext_tmp*
-build.pem
 
 # Logs
 logs
