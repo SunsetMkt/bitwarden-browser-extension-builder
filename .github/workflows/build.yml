@@ -54,10 +54,6 @@ jobs:
           echo "latest_browser_tag=$latest_browser_tag" >> $GITHUB_OUTPUT
           echo "latest_browser_tag=$latest_browser_tag"
 
-          # Get changelog
-          echo "changelog=$(git log --pretty=format:'- %s' $latest_browser_tag)" >> $GITHUB_OUTPUT
-          echo "changelog=$changelog"
-
       - name: Get Node Version
         id: retrieve-node-version
         working-directory: ./clients
