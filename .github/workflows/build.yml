@@ -13,6 +13,9 @@ on:
     # On every Sunday 12:00
     - cron: "0 12 * * 0"
 
+permissions:
+  contents: write # To Release
+
 defaults:
   run:
     shell: bash
@@ -240,12 +243,12 @@ jobs:
           if-no-files-found: error
 
       - name: Upload coverage artifact
-        if: false
+        # if: false
         uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
         with:
           name: coverage-${{ env._LATEST_BROWSER_TAG }}.zip
           path: ./clients/browser-source/apps/browser/coverage/coverage-${{ env._LATEST_BROWSER_TAG }}.zip
-          if-no-files-found: error
+          # if-no-files-found: error
 
       - name: Upload Release
         uses: marvinpinto/action-automatic-releases@d68defdd11f9dcc7f52f35c1b7c236ee7513bcc1 # Last commit before archived
@@ -255,7 +258,8 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "latest"
           prerelease: false
-          title: "Latest Workflow Output"
+          title: "${{ env._LATEST_BROWSER_TAG }}"
           files: |
             ./clients/browser-source/apps/browser/dist/*
             ./clients/browser-source.zip
+            ./clients/browser-source/apps/browser/coverage/*
