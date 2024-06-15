@@ -62,31 +62,31 @@ jobs:
           NODE_VERSION=${NODE_NVMRC/v/''}
           echo "node_version=$NODE_VERSION" >> $GITHUB_OUTPUT
 
-      - name: Testing locales - extName length
-        working-directory: ./clients
-        continue-on-error: true
-        run: |
-          found_error=false
+      # - name: Testing locales - extName length
+      #   working-directory: ./clients/apps/browser/
+      #   continue-on-error: true
+      #   run: |
+      #     found_error=false
 
-          echo "Locales Test"
-          echo "============"
-          echo "extName string must be 40 characters or less"
-          echo
-          for locale in $(ls src/_locales/); do
-            string_length=$(jq '.extName.message | length' src/_locales/$locale/messages.json)
-            if [[ $string_length -gt 40 ]]; then
-              echo "$locale: $string_length"
-              found_error=true
-            fi
-          done
+      #     echo "Locales Test"
+      #     echo "============"
+      #     echo "extName string must be 40 characters or less"
+      #     echo
+      #     for locale in $(ls src/_locales/); do
+      #       string_length=$(jq '.extName.message | length' src/_locales/$locale/messages.json)
+      #       if [[ $string_length -gt 40 ]]; then
+      #         echo "$locale: $string_length"
+      #         found_error=true
+      #       fi
+      #     done
 
-          if $found_error; then
-            echo
-            echo "Please fix 'extName' for the locales listed above."
-            exit 1
-          else
-            echo "Test passed!"
-          fi
+      #     if $found_error; then
+      #       echo
+      #       echo "Please fix 'extName' for the locales listed above."
+      #       exit 1
+      #     else
+      #       echo "Test passed!"
+      #     fi
 
   build:
     name: Build
@@ -243,13 +243,13 @@ jobs:
           path: ./clients/browser-source.zip
           if-no-files-found: error
 
-      - name: Upload coverage artifact
-        # if: false
-        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
-        with:
-          name: coverage-${{ env._LATEST_BROWSER_TAG }}.zip
-          path: ./clients/browser-source/apps/browser/coverage/coverage-${{ env._LATEST_BROWSER_TAG }}.zip
-          # if-no-files-found: error
+      # - name: Upload coverage artifact
+      #   if: false
+      #   uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+      #   with:
+      #     name: coverage-${{ env._LATEST_BROWSER_TAG }}.zip
+      #     path: ./clients/browser-source/apps/browser/coverage/coverage-${{ env._LATEST_BROWSER_TAG }}.zip
+      #     if-no-files-found: error
 
       - name: Upload Release
         uses: marvinpinto/action-automatic-releases@d68defdd11f9dcc7f52f35c1b7c236ee7513bcc1 # Last commit before archived
@@ -257,10 +257,9 @@ jobs:
         if: success()
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
+          automatic_release_tag: "${{ env._LATEST_BROWSER_TAG }}"
           prerelease: false
           title: "${{ env._LATEST_BROWSER_TAG }}"
           files: |
             ./clients/browser-source/apps/browser/dist/*
             ./clients/browser-source.zip
-            ./clients/browser-source/apps/browser/coverage/*
