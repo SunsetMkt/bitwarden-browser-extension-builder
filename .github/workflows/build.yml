@@ -1,104 +1,251 @@
 # https://github.com/bitwarden/clients/blob/main/.github/workflows/build-browser.yml
 ---
-name: Build
+name: Build Browser
 
 on:
+  workflow_call:
+    inputs: {}
   workflow_dispatch:
+    inputs: {}
   push:
     branches: [master, main]
   schedule:
     # On every Sunday 12:00
     - cron: "0 12 * * 0"
 
-permissions: write-all
-
 defaults:
   run:
     shell: bash
 
 jobs:
-  build:
-    name: Build
+  setup:
+    name: Setup
     runs-on: ubuntu-22.04
+    outputs:
+      latest_browser_tag: ${{ steps.gen_vars.outputs.latest_browser_tag }}
+      node_version: ${{ steps.retrieve-node-version.outputs.node_version }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
+      - name: Clone real repo
+        run: |
+          git clone https://github.com/bitwarden/clients.git
+
+      - name: Get Latest Browser Tag
+        id: gen_vars
+        working-directory: ./clients
+        run: |
+          # Find all tags and sort by time
+          git fetch --tags
+          tags=$(git tag --sort=-creatordate)
+          # Find "browser" tag
+          latest_browser_tag=""
+          for tag in $tags; do
+              if [[ $tag == *"browser"* ]]; then
+                  latest_browser_tag=$tag
+                  break
+              fi
+          done
+
+          echo "latest_browser_tag=$latest_browser_tag" >> $GITHUB_OUTPUT
+
+      - name: Get Node Version
+        id: retrieve-node-version
+        working-directory: ./clients
+        run: |
+          NODE_NVMRC=$(cat .nvmrc)
+          NODE_VERSION=${NODE_NVMRC/v/''}
+          echo "node_version=$NODE_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Testing locales - extName length
+        working-directory: ./clients
+        continue-on-error: true
+        run: |
+          found_error=false
+
+          echo "Locales Test"
+          echo "============"
+          echo "extName string must be 40 characters or less"
+          echo
+          for locale in $(ls src/_locales/); do
+            string_length=$(jq '.extName.message | length' src/_locales/$locale/messages.json)
+            if [[ $string_length -gt 40 ]]; then
+              echo "$locale: $string_length"
+              found_error=true
+            fi
+          done
+
+          if $found_error; then
+            echo
+            echo "Please fix 'extName' for the locales listed above."
+            exit 1
+          else
+            echo "Test passed!"
+          fi
+
+  build:
+    name: Build
+    runs-on: ubuntu-22.04
+    needs:
+      - setup
+    env:
+      _LATEST_BROWSER_TAG: ${{ needs.setup.outputs.latest_browser_tag }}
+      _NODE_VERSION: ${{ needs.setup.outputs.node_version }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
+      - name: Clone real repo
+        run: |
+          git clone https://github.com/bitwarden/clients.git
+
+      - name: Setup repo
+        working-directory: ./clients
+        run: |
+          git fetch --tags
+          echo "Checking out ${{ env._LATEST_BROWSER_TAG }}"
+          git checkout ${{ env._LATEST_BROWSER_TAG }}
+
       - name: Set up Node
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
-          node-version: 20 # See .nvmrc # https://github.com/bitwarden/clients/blob/main/.nvmrc
-
-      - name: Setup repo
-        run: |
-          chmod +x setup_repo.sh
-          ./setup_repo.sh
+          cache: "npm"
+          cache-dependency-path: "**/package-lock.json"
+          node-version: ${{ env._NODE_VERSION }}
 
       - name: Print environment
         run: |
           node --version
           npm --version
 
-      - name: Apply patch
+      - name: Apply internal patch
         run: |
-          chmod +x patch_code.sh
-          ./patch_code.sh
+          #!/bin/bash
+          # To create a patch, git diff > mypatch.patch
+          repo_dir="clients"
+
+          cp fakePremium.patch "$repo_dir"
+
+          # Python script before cd
+          python patchManifestV3.py
+          python patchManifestV2.py
+
+          cd "$repo_dir"
+
+          git apply fakePremium.patch -v
+
+      - name: Build sources for reviewers
+        working-directory: ./clients
+        run: |
+          # Include hidden files in glob copy
+          shopt -s dotglob
+
+          # Remove ".git" directory
+          rm -r .git
+
+          # Copy root level files to source directory
+          mkdir browser-source
+          FILES=$(find . -maxdepth 1 -type f)
+          for FILE in $FILES; do cp "$FILE" browser-source/; done
+
+          # Copy patches to the Browser source directory
+          mkdir -p browser-source/patches
+          cp -r patches/* browser-source/patches
+
+          # Copy apps/browser to the Browser source directory
+          mkdir -p browser-source/apps/browser
+          cp -r apps/browser/* browser-source/apps/browser
+
+          # Copy libs to Browser source directory
+          mkdir browser-source/libs
+          cp -r libs/* browser-source/libs
+
+          zip -r browser-source.zip browser-source
+
+      - name: NPM setup
+        run: npm ci
+        working-directory: ./clients/browser-source/
 
       - name: Build
-        run: |
-          chmod +x build_extension.sh
-          ./build_extension.sh
+        run: npm run dist
+        working-directory: ./clients/browser-source/apps/browser
 
-      # - name: Upload Chrome artifact
-      #   uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
-      #   continue-on-error: true
-      #   with:
-      #     path: clients/apps/browser/dist/dist-chrome.zip
-      #     name: dist-chrome
+      - name: Build Manifest v3
+        run: npm run dist:mv3
+        working-directory: ./clients/browser-source/apps/browser
 
-      - name: Upload dist folder
+      - name: Build Chrome Manifest v3 Beta
+        run: npm run dist:chrome:beta
+        working-directory: ./clients/browser-source/apps/browser
+
+      - name: Gulp
+        run: gulp ci
+        working-directory: ./clients/browser-source/apps/browser
+
+      - name: Upload Opera artifact
         uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
         with:
-          path: clients/apps/browser/dist/
-          name: dist
+          name: dist-opera-${{ env._LATEST_BROWSER_TAG }}.zip
+          path: ./clients/browser-source/apps/browser/dist/dist-opera.zip
+          if-no-files-found: error
 
-      - name: Upload src folder
+      # - name: Upload Opera MV3 artifact
+      #   uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
+      #   with:
+      #     name: dist-opera-MV3-${{ env._LATEST_BROWSER_TAG }}.zip
+      #     path: browser-source/apps/browser/dist/dist-opera-mv3.zip
+      #     if-no-files-found: error
+
+      - name: Upload Chrome MV3 artifact
         uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
         with:
-          path: clients/apps/browser/
-          name: src
+          name: dist-chrome-MV3-${{ env._LATEST_BROWSER_TAG }}.zip
+          path: ./clients/browser-source/apps/browser/dist/dist-chrome-mv3.zip
+          if-no-files-found: error
 
-      # - name: Setup Chrome
-      #   uses: browser-actions/setup-chrome@361a23fcf94a523a91c9cfae6f11c2a5c2d87f64 # v1
-      #   continue-on-error: true
+      - name: Upload Chrome MV3 Beta artifact (DO NOT USE FOR PROD)
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+        with:
+          name: DO-NOT-USE-FOR-PROD-dist-chrome-MV3-beta-${{ env._LATEST_BROWSER_TAG }}.zip
+          path: ./clients/browser-source/apps/browser/dist/dist-chrome-mv3-beta.zip
+          if-no-files-found: error
 
-      # - name: Pack Chrome Extension
-      #   continue-on-error: true
-      #   env:
-      #     PACK_EXTENSION_KEY: ${{ secrets.PACK_EXTENSION_KEY }}
-      #   run: |
-      #     chmod +x pack_extension.sh
-      #     ./pack_extension.sh
+      - name: Upload Firefox artifact
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+        with:
+          name: dist-firefox-${{ env._LATEST_BROWSER_TAG }}.zip
+          path: ./clients/browser-source/apps/browser/dist/dist-firefox.zip
+          if-no-files-found: error
 
-      # - name: Upload Chrome Extension
-      #   uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
-      #   continue-on-error: true
+      - name: Upload Edge artifact
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+        with:
+          name: dist-edge-${{ env._LATEST_BROWSER_TAG }}.zip
+          path: ./clients/browser-source/apps/browser/dist/dist-edge.zip
+          if-no-files-found: error
+
+      # - name: Upload Edge MV3 artifact
+      #   uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
       #   with:
-      #     path: clients/apps/browser/dist/dist-chrome.crx
-      #     name: dist-chrome-crx
+      #     name: dist-edge-MV3-${{ env._LATEST_BROWSER_TAG }}.zip
+      #     path: browser-source/apps/browser/dist/dist-edge-mv3.zip
+      #     if-no-files-found: error
 
-      - name: Push Changes
-        continue-on-error: true
-        run: |
-          # Copy dist
-          # cp clients/apps/browser/dist/dist-edge-mv3.zip .
-          # Set up git config
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          # Push changes
-          git add .
-          git commit -m "Build: $(date +%Y-%m-%d_%H-%M-%S)"
-          git push
+      - name: Upload browser source
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+        with:
+          name: browser-source-${{ env._LATEST_BROWSER_TAG }}.zip
+          path: ./clients/browser-source.zip
+          if-no-files-found: error
+
+      - name: Upload coverage artifact
+        if: false
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+        with:
+          name: coverage-${{ env._LATEST_BROWSER_TAG }}.zip
+          path: ./clients/browser-source/apps/browser/coverage/coverage-${{ env._LATEST_BROWSER_TAG }}.zip
+          if-no-files-found: error
 
       - name: Upload Release
         uses: marvinpinto/action-automatic-releases@d68defdd11f9dcc7f52f35c1b7c236ee7513bcc1 # Last commit before archived
@@ -110,4 +257,5 @@ jobs:
           prerelease: false
           title: "Latest Workflow Output"
           files: |
-            clients/apps/browser/dist/*
+            ./clients/browser-source/apps/browser/dist/*
+            ./clients/browser-source.zip
