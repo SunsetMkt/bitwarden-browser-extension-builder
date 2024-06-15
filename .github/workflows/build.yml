@@ -129,7 +129,7 @@ jobs:
           repo_dir="clients"
           patches_dir="patches"
 
-          cp -r "$patches_dir/*" .
+          cp "$patches_dir/*" .
 
           cp fakePremium.patch "$repo_dir"
 
