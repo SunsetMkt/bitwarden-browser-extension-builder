@@ -21,5 +21,9 @@ orig["icons"] = {
     "128": "images/icon128_gray.png",
 }
 
+if len(orig["description"]) > 132:
+    raise ValueError("Description too long")
+
 with open("clients/apps/browser/src/manifest.v3.json", "w", encoding="utf-8") as f:
     json.dump(orig, f, indent=2)
+    print("Wrote manifest.v3.json")
