@@ -4,7 +4,8 @@ Builder for Bitwarden Chrome & Firefox Extension.
 
 ## Get Sunsetwarden
 
-[Firefox](https://addons.mozilla.org/en-US/firefox/addon/sunsetwarden/) [Edge](https://microsoftedge.microsoft.com/addons/detail/sunsetwarden/nbnflbnmlablihnpobeakamhjckamaaj?hl=en-US)
+[![Mozilla Add-on Version](https://img.shields.io/amo/v/sunsetwarden?logo=firefox)
+](https://addons.mozilla.org/en-US/firefox/addon/sunsetwarden/) [![Edge Add-on Version](https://img.shields.io/badge/dynamic/json?label=edge%20add-on&prefix=v&query=%24.version&url=https%3A%2F%2Fmicrosoftedge.microsoft.com%2Faddons%2Fgetproductdetailsbycrxid%2Fnbnflbnmlablihnpobeakamhjckamaaj&logo=microsoftedge&logoColor=%230078D7)](https://microsoftedge.microsoft.com/addons/detail/sunsetwarden/nbnflbnmlablihnpobeakamhjckamaaj?hl=en-US)
 
 Sunsetwarden is an exclusive build of the popular password manager Bitwarden, designed for internal use by SETG.
 
