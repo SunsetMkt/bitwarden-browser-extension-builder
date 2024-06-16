@@ -6,7 +6,7 @@ with open("clients/apps/browser/src/manifest.v3.json", "r", encoding="utf-8") as
 orig["name"] = "Sunsetwarden"
 orig["short_name"] = "Sunsetwarden"
 orig["author"] = "Sunset Edu. & Tech. Group and Bitwarden Inc."
-orig["homepage_url"] = "https://github.com/lwd-temp/bitwarden-browser-extension-builder"
+orig["homepage_url"] = "https://github.com/SunsetMkt/bitwarden-browser-extension-builder"
 orig["action"]["default_title"] = "Sunsetwarden"
 orig["sidebar_action"]["default_title"] = "Sunsetwarden"
 del orig["applications"]["gecko"]["id"]
