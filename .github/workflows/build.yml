@@ -253,15 +253,26 @@ jobs:
       #     path: ./clients/browser-source/apps/browser/coverage/coverage-${{ env._LATEST_BROWSER_TAG }}.zip
       #     if-no-files-found: error
 
-      - name: Upload Release
-        uses: marvinpinto/action-automatic-releases@d68defdd11f9dcc7f52f35c1b7c236ee7513bcc1 # Last commit before archived
-        continue-on-error: true
-        if: success()
+      # - name: Upload Release
+      #   uses: marvinpinto/action-automatic-releases@d68defdd11f9dcc7f52f35c1b7c236ee7513bcc1 # Last commit before archived
+      #   continue-on-error: true
+      #   if: success()
+      #   with:
+      #     repo_token: "${{ secrets.GITHUB_TOKEN }}"
+      #     automatic_release_tag: "${{ env._LATEST_BROWSER_TAG }}"
+      #     prerelease: false
+      #     title: "${{ env._LATEST_BROWSER_TAG }}"
+      #     files: |
+      #       ./clients/browser-source/apps/browser/dist/*
+      #       ./clients/browser-source.zip
+
+      - name: Create release
+        uses: ncipollo/release-action@2c591bcc8ecdcd2db72b97d6147f871fcd833ba5 # v1.14.0
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "${{ env._LATEST_BROWSER_TAG }}"
-          prerelease: false
-          title: "${{ env._LATEST_BROWSER_TAG }}"
-          files: |
-            ./clients/browser-source/apps/browser/dist/*
-            ./clients/browser-source.zip
+          artifacts: "./clients/browser-source/apps/browser/dist/*,./clients/browser-source.zip"
+          tag: "${{ env._LATEST_BROWSER_TAG }}"
+          name: "${{ env._LATEST_BROWSER_TAG }}"
+          body: "${{ env._LATEST_BROWSER_TAG }} [Original Changelog](https://github.com/bitwarden/clients/releases/tag/${{ env._LATEST_BROWSER_TAG }})"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          draft: false
+          allowUpdates: true
