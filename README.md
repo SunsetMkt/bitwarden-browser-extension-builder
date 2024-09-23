@@ -11,11 +11,13 @@ Sunsetwarden is an exclusive build of the popular password manager Bitwarden, de
 
 This extension is designed for internal use but still may be used by the public. The user must have a Bitwarden server to connect to because our server is not accessible from the internet. However, it's strongly recommended to use the official build of Bitwarden if you are not a member of the team. We won't be responsible for any personal data or financial losses.
 
-You may also check its [Upstream source](https://github.com/bitwarden/clients) and our [Build workflow](https://github.com/SunsetMkt/bitwarden-browser-extension-builder).
+You may also check its [upstream source](https://github.com/bitwarden/clients) and our [build workflow](https://github.com/SunsetMkt/bitwarden-browser-extension-builder).
 
-## Development
+## Development Notice
 
-The main modified built file is `background.js`, check diff with the latest stable official build.
+Run the workflow and download the releases.
+
+Currently, `dist-edge-mv3.zip` and `dist-firefox.zip` are published.
 
 **For beginners, it's always recommended to use the latest official build of your password manager.**
 
