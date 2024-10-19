@@ -130,7 +130,7 @@ jobs:
       - name: Build dist
         # To use the official Bitwarden server
         # There may be CORS issues, good luck with that
-        run: npm run dist:bit:cloud
+        run: NODE_ENV=production ENV=cloud npm run build:oss
         working-directory: ./clients/apps/web
 
       - name: Package artifact
