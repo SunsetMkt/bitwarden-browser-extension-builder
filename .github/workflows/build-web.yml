@@ -127,9 +127,10 @@ jobs:
         run: npm ci
         working-directory: ./clients/
 
-      - name: Build dist:oss:selfhost ENV=cloud
+      - name: Build dist
         # To use the official Bitwarden server
-        run: ENV=cloud npm run dist:oss:selfhost
+        # There may be CORS issues, good luck with that
+        run: npm run dist:bit:cloud
         working-directory: ./clients/apps/web
 
       - name: Package artifact
