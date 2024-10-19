@@ -276,3 +276,4 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           draft: false
           allowUpdates: true
+          makeLatest: true
