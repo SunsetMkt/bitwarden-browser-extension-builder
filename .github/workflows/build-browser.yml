@@ -29,7 +29,7 @@ jobs:
       node_version: ${{ steps.retrieve-node-version.outputs.node_version }}
     steps:
       - name: Checkout repo
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Clone real repo
         run: |
@@ -62,43 +62,54 @@ jobs:
           NODE_VERSION=${NODE_NVMRC/v/''}
           echo "node_version=$NODE_VERSION" >> $GITHUB_OUTPUT
 
-      # - name: Testing locales - extName length
-      #   working-directory: ./clients/apps/browser/
-      #   continue-on-error: true
-      #   run: |
-      #     found_error=false
+  locales-test:
+    name: Locales Test
+    runs-on: ubuntu-22.04
+    needs:
+      - setup
+    defaults:
+      run:
+        working-directory: ./clients/apps/browser/
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
-      #     echo "Locales Test"
-      #     echo "============"
-      #     echo "extName string must be 40 characters or less"
-      #     echo
-      #     for locale in $(ls src/_locales/); do
-      #       string_length=$(jq '.extName.message | length' src/_locales/$locale/messages.json)
-      #       if [[ $string_length -gt 40 ]]; then
-      #         echo "$locale: $string_length"
-      #         found_error=true
-      #       fi
-      #     done
+      - name: Testing locales - extName length
+        run: |
+          found_error=false
 
-      #     if $found_error; then
-      #       echo
-      #       echo "Please fix 'extName' for the locales listed above."
-      #       exit 1
-      #     else
-      #       echo "Test passed!"
-      #     fi
+          echo "Locales Test"
+          echo "============"
+          echo "extName string must be 40 characters or less"
+          echo
+          for locale in $(ls src/_locales/); do
+            string_length=$(jq '.extName.message | length' src/_locales/$locale/messages.json)
+            if [[ $string_length -gt 40 ]]; then
+              echo "$locale: $string_length"
+              found_error=true
+            fi
+          done
+
+          if $found_error; then
+            echo
+            echo "Please fix 'extName' for the locales listed above."
+            # exit 1
+          else
+            echo "Test passed!"
+          fi
 
   build:
     name: Build
     runs-on: ubuntu-22.04
     needs:
       - setup
+      - locales-test
     env:
       _LATEST_BROWSER_TAG: ${{ needs.setup.outputs.latest_browser_tag }}
       _NODE_VERSION: ${{ needs.setup.outputs.node_version }}
     steps:
       - name: Checkout repo
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Clone real repo
         run: |
@@ -112,7 +123,7 @@ jobs:
           git checkout ${{ env._LATEST_BROWSER_TAG }}
 
       - name: Set up Node
-        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
         with:
           cache: "npm"
           cache-dependency-path: "**/package-lock.json"
@@ -186,86 +197,68 @@ jobs:
         run: npm run dist:chrome:beta
         working-directory: ./clients/browser-source/apps/browser
 
-      - name: Gulp
-        run: gulp ci
-        working-directory: ./clients/browser-source/apps/browser
-
       - name: Upload Opera artifact
-        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
         with:
           name: dist-opera-${{ env._LATEST_BROWSER_TAG }}.zip
           path: ./clients/browser-source/apps/browser/dist/dist-opera.zip
           if-no-files-found: error
 
-      # - name: Upload Opera MV3 artifact
-      #   uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
-      #   with:
-      #     name: dist-opera-MV3-${{ env._LATEST_BROWSER_TAG }}.zip
-      #     path: browser-source/apps/browser/dist/dist-opera-mv3.zip
-      #     if-no-files-found: error
+      - name: Upload Opera MV3 artifact (DO NOT USE FOR PROD)
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
+        with:
+          name: DO-NOT-USE-FOR-PROD-dist-opera-MV3-${{ env._LATEST_BROWSER_TAG }}.zip
+          path: ./clients/browser-source/apps/browser/dist/dist-opera-mv3.zip
+          if-no-files-found: error
 
       - name: Upload Chrome MV3 artifact
-        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
         with:
           name: dist-chrome-MV3-${{ env._LATEST_BROWSER_TAG }}.zip
           path: ./clients/browser-source/apps/browser/dist/dist-chrome-mv3.zip
           if-no-files-found: error
 
       - name: Upload Chrome MV3 Beta artifact (DO NOT USE FOR PROD)
-        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
         with:
           name: DO-NOT-USE-FOR-PROD-dist-chrome-MV3-beta-${{ env._LATEST_BROWSER_TAG }}.zip
           path: ./clients/browser-source/apps/browser/dist/dist-chrome-mv3-beta.zip
           if-no-files-found: error
 
       - name: Upload Firefox artifact
-        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
         with:
           name: dist-firefox-${{ env._LATEST_BROWSER_TAG }}.zip
           path: ./clients/browser-source/apps/browser/dist/dist-firefox.zip
           if-no-files-found: error
 
+      - name: Upload Firefox MV3 artifact (DO NOT USE FOR PROD)
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
+        with:
+          name: DO-NOT-USE-FOR-PROD-dist-firefox-MV3-${{ env._LATEST_BROWSER_TAG }}.zip
+          path: ./clients/browser-source/apps/browser/dist/dist-firefox-mv3.zip
+          if-no-files-found: error
+
       - name: Upload Edge artifact
-        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
         with:
           name: dist-edge-${{ env._LATEST_BROWSER_TAG }}.zip
           path: ./clients/browser-source/apps/browser/dist/dist-edge.zip
           if-no-files-found: error
 
-      # - name: Upload Edge MV3 artifact
-      #   uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
-      #   with:
-      #     name: dist-edge-MV3-${{ env._LATEST_BROWSER_TAG }}.zip
-      #     path: browser-source/apps/browser/dist/dist-edge-mv3.zip
-      #     if-no-files-found: error
+      - name: Upload Edge MV3 artifact (DO NOT USE FOR PROD)
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
+        with:
+          name: DO-NOT-USE-FOR-PROD-dist-edge-MV3-${{ env._LATEST_BROWSER_TAG }}.zip
+          path: ./clients/browser-source/apps/browser/dist/dist-edge-mv3.zip
+          if-no-files-found: error
 
       - name: Upload browser source
-        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
         with:
           name: browser-source-${{ env._LATEST_BROWSER_TAG }}.zip
           path: ./clients/browser-source.zip
           if-no-files-found: error
-
-      # - name: Upload coverage artifact
-      #   if: false
-      #   uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
-      #   with:
-      #     name: coverage-${{ env._LATEST_BROWSER_TAG }}.zip
-      #     path: ./clients/browser-source/apps/browser/coverage/coverage-${{ env._LATEST_BROWSER_TAG }}.zip
-      #     if-no-files-found: error
-
-      # - name: Upload Release
-      #   uses: marvinpinto/action-automatic-releases@d68defdd11f9dcc7f52f35c1b7c236ee7513bcc1 # Last commit before archived
-      #   continue-on-error: true
-      #   if: success()
-      #   with:
-      #     repo_token: "${{ secrets.GITHUB_TOKEN }}"
-      #     automatic_release_tag: "${{ env._LATEST_BROWSER_TAG }}"
-      #     prerelease: false
-      #     title: "${{ env._LATEST_BROWSER_TAG }}"
-      #     files: |
-      #       ./clients/browser-source/apps/browser/dist/*
-      #       ./clients/browser-source.zip
 
       - name: Create release
         uses: ncipollo/release-action@2c591bcc8ecdcd2db72b97d6147f871fcd833ba5 # v1.14.0
