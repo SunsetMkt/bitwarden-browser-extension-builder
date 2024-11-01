@@ -1,19 +1,21 @@
 # bitwarden-browser-extension-builder
 
-Builder for Bitwarden Edge & Firefox Addon.
+Builder for Sunsetwarden Edge & Firefox Addon.
 
 ## Get Sunsetwarden
 
 [![Mozilla Add-on Version](https://img.shields.io/amo/v/sunsetwarden?logo=firefox)
 ](https://addons.mozilla.org/en-US/firefox/addon/sunsetwarden/) [![Edge Add-on Version](https://img.shields.io/badge/dynamic/json?label=edge%20add-on&prefix=v&query=%24.version&url=https%3A%2F%2Fmicrosoftedge.microsoft.com%2Faddons%2Fgetproductdetailsbycrxid%2Fnbnflbnmlablihnpobeakamhjckamaaj&logo=microsoftedge&logoColor=%230078D7)](https://microsoftedge.microsoft.com/addons/detail/sunsetwarden/nbnflbnmlablihnpobeakamhjckamaaj?hl=en-US)
 
-Sunsetwarden is an exclusive build of the popular password manager Bitwarden, designed for internal use by SETG.
+Sunsetwarden is an exclusive build of the popular password manager Bitwarden®, designed for internal use by SETG.
 
-This extension is designed for internal use but still may be used by the public. The user must have a Bitwarden server to connect to because our server is not accessible from the internet. However, it's strongly recommended to use the official build of Bitwarden if you are not a member of the team. We won't be responsible for any personal data or financial losses.
+This extension is designed for internal use but still may be used by the public. The user must have a Bitwarden® server implementation to connect to because our server is not accessible from the internet. However, it's strongly recommended to use the official build of Bitwarden® if you are not a member of the team. We won't be responsible for any personal data or financial losses.
 
 You may also check its [upstream source](https://github.com/bitwarden/clients) and our [build workflow](https://github.com/SunsetMkt/bitwarden-browser-extension-builder).
 
 ## Development Notice
+
+> We are planning to change the icons because of [TRADEMARK GUIDELINES](https://github.com/bitwarden/server/blob/main/TRADEMARK_GUIDELINES.md).
 
 Run the workflow and download the releases.
 
