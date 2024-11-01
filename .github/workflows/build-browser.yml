@@ -70,9 +70,6 @@ jobs:
     env:
       _LATEST_BROWSER_TAG: ${{ needs.setup.outputs.latest_browser_tag }}
       _NODE_VERSION: ${{ needs.setup.outputs.node_version }}
-    defaults:
-      run:
-        working-directory: clients/apps/browser/
     steps:
       - name: Checkout repo
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -89,6 +86,7 @@ jobs:
           git checkout ${{ env._LATEST_BROWSER_TAG }}
 
       - name: Testing locales - extName length
+        working-directory: clients/apps/browser/
         run: |
           found_error=false
 
