@@ -67,12 +67,26 @@ jobs:
     runs-on: ubuntu-22.04
     needs:
       - setup
+    env:
+      _LATEST_BROWSER_TAG: ${{ needs.setup.outputs.latest_browser_tag }}
+      _NODE_VERSION: ${{ needs.setup.outputs.node_version }}
     defaults:
       run:
         working-directory: clients/apps/browser/
     steps:
       - name: Checkout repo
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Clone real repo
+        run: |
+          git clone https://github.com/bitwarden/clients.git
+
+      - name: Setup repo
+        working-directory: clients
+        run: |
+          git fetch --tags
+          echo "Checking out ${{ env._LATEST_BROWSER_TAG }}"
+          git checkout ${{ env._LATEST_BROWSER_TAG }}
 
       - name: Testing locales - extName length
         run: |
