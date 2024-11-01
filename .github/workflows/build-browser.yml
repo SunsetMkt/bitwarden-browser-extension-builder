@@ -132,6 +132,7 @@ jobs:
           cp -r $patches_dir/* .
 
           cp fakePremium.patch "$repo_dir"
+          cp images/* "$repo_dir/apps/browser/src/images/"
 
           # Python script before cd
           python patchManifestV3.py
