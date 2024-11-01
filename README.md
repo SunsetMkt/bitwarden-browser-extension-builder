@@ -11,7 +11,7 @@ Sunsetwarden is an exclusive build of the popular password manager Bitwarden®, 
 
 This extension is designed for internal use but still may be used by the public. The user must have a Bitwarden® server implementation to connect to because our server is not accessible from the internet. However, it's strongly recommended to use the official build of Bitwarden® if you are not a member of the team. We won't be responsible for any personal data or financial losses.
 
-You may also check its [upstream source](https://github.com/bitwarden/clients) and our [build workflow](https://github.com/SunsetMkt/bitwarden-browser-extension-builder).
+You may also check its [upstream source](https://github.com/bitwarden/clients) and our [build workflow](https://github.com/SunsetMkt/Sunsetwarden).
 
 ## Development Notice
 
