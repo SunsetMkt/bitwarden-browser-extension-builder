@@ -19,8 +19,8 @@ You may also check its [upstream source](https://github.com/bitwarden/clients) a
 
 Run the workflow and download the releases.
 
-Currently, `dist-edge-mv3.zip` and `dist-firefox.zip` are published.
+Currently, `dist-edge-mv3.zip` and `dist-firefox.zip` are published to extension stores.
 
 **For beginners, it's always recommended to use the latest official build of your password manager.**
 
-To load the built extension, [load an unpacked extension](https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world#load-unpacked) or [self-hosting Chromium extensions](https://www.meziantou.net/self-hosting-chromium-extensions.htm).
+To load the built extension on Chromium-based browsers, [load an unpacked extension](https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world#load-unpacked) or [self-hosting Chromium extensions](https://www.meziantou.net/self-hosting-chromium-extensions.htm).
