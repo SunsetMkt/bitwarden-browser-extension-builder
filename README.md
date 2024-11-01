@@ -1,4 +1,4 @@
-# bitwarden-browser-extension-builder
+# Sunsetwarden
 
 Builder for Sunsetwarden Edge & Firefox Addon.
 
@@ -15,7 +15,7 @@ You may also check its [upstream source](https://github.com/bitwarden/clients) a
 
 ## Development Notice
 
-> We are planning to change the icons because of [TRADEMARK GUIDELINES](https://github.com/bitwarden/server/blob/main/TRADEMARK_GUIDELINES.md).
+> We have changed the icons because of [TRADEMARK GUIDELINES](https://github.com/bitwarden/server/blob/main/TRADEMARK_GUIDELINES.md).
 
 Run the workflow and download the releases.
 
