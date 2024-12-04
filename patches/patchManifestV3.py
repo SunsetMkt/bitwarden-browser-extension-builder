@@ -3,15 +3,15 @@ import json
 with open("clients/apps/browser/src/manifest.v3.json", "r", encoding="utf-8") as f:
     orig = json.load(f)
 
-orig["name"] = "Sunsetwarden"
-orig["short_name"] = "Sunsetwarden"
+orig["name"] = "Sunsetvault"
+orig["short_name"] = "Sunsetvault"
 orig["author"] = "Sunset Edu. & Tech. Group and Bitwarden® community"
-orig["homepage_url"] = "https://github.com/SunsetMkt/Sunsetwarden"
-orig["action"]["default_title"] = "Sunsetwarden"
-orig["sidebar_action"]["default_title"] = "Sunsetwarden"
+orig["homepage_url"] = "https://github.com/SunsetMkt/Sunsetvault"
+orig["action"]["default_title"] = "Sunsetvault"
+orig["sidebar_action"]["default_title"] = "Sunsetvault"
 del orig["applications"]["gecko"]["id"]
 orig["description"] = (
-    "Sunsetwarden is an exclusive build of the popular password manager Bitwarden®, designed for internal use by SETG."
+    "Sunsetvault is an exclusive build of the popular open source password manager, designed for internal use by SETG."
 )
 orig["icons"] = {
     "16": "images/icon16_sunset.png",
