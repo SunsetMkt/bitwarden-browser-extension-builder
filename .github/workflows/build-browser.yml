@@ -115,7 +115,7 @@ jobs:
     runs-on: ubuntu-22.04
     needs:
       - setup
-      - locales-test
+      # - locales-test
     env:
       _LATEST_BROWSER_TAG: ${{ needs.setup.outputs.latest_browser_tag }}
       _NODE_VERSION: ${{ needs.setup.outputs.node_version }}
@@ -193,20 +193,74 @@ jobs:
 
           zip -r browser-source.zip browser-source
 
+      - name: Upload browser source
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
+        with:
+          name: browser-source-${{ env._LATEST_BROWSER_TAG }}.zip
+          path: clients/browser-source.zip
+          if-no-files-found: error
+
       - name: NPM setup
         run: npm ci
         working-directory: clients/browser-source/
 
-      - name: Build
-        run: npm run dist
+      - name: Build Chrome
+        run: npm run dist:chrome
         working-directory: clients/browser-source/apps/browser
 
-      - name: Build Manifest v3
-        run: npm run dist:mv3
+      - name: Upload Chrome MV3 artifact
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
+        with:
+          name: dist-chrome-MV3-${{ env._LATEST_BROWSER_TAG }}.zip
+          path: clients/browser-source/apps/browser/dist/dist-chrome.zip
+          if-no-files-found: error
+
+      - name: Build Edge
+        run: npm run dist:edge
         working-directory: clients/browser-source/apps/browser
 
-      - name: Build Chrome Manifest v3 Beta
-        run: npm run dist:chrome:beta
+      - name: Upload Edge artifact
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
+        with:
+          name: dist-edge-${{ env._LATEST_BROWSER_TAG }}.zip
+          path: clients/browser-source/apps/browser/dist/dist-edge.zip
+          if-no-files-found: error
+
+      - name: Build Edge (MV3)
+        run: npm run dist:edge:mv3
+        working-directory: clients/browser-source/apps/browser
+
+      - name: Upload Edge MV3 artifact (DO NOT USE FOR PROD)
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
+        with:
+          name: DO-NOT-USE-FOR-PROD-dist-edge-MV3-${{ env._LATEST_BROWSER_TAG }}.zip
+          path: clients/browser-source/apps/browser/dist/dist-edge.zip
+          if-no-files-found: error
+
+      - name: Build Firefox
+        run: npm run dist:firefox
+        working-directory: clients/browser-source/apps/browser
+
+      - name: Upload Firefox artifact
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
+        with:
+          name: dist-firefox-${{ env._LATEST_BROWSER_TAG }}.zip
+          path: clients/browser-source/apps/browser/dist/dist-firefox.zip
+          if-no-files-found: error
+
+      - name: Build Firefox (MV3)
+        run: npm run dist:firefox:mv3
+        working-directory: clients/browser-source/apps/browser
+
+      - name: Upload Firefox MV3 artifact (DO NOT USE FOR PROD)
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
+        with:
+          name: DO-NOT-USE-FOR-PROD-dist-firefox-MV3-${{ env._LATEST_BROWSER_TAG }}.zip
+          path: clients/browser-source/apps/browser/dist/dist-firefox.zip
+          if-no-files-found: error
+
+      - name: Build Opera
+        run: npm run dist:opera
         working-directory: clients/browser-source/apps/browser
 
       - name: Upload Opera artifact
@@ -216,60 +270,15 @@ jobs:
           path: clients/browser-source/apps/browser/dist/dist-opera.zip
           if-no-files-found: error
 
+      - name: Build Opera (MV3)
+        run: npm run dist:opera:mv3
+        working-directory: clients/browser-source/apps/browser
+
       - name: Upload Opera MV3 artifact (DO NOT USE FOR PROD)
         uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
         with:
           name: DO-NOT-USE-FOR-PROD-dist-opera-MV3-${{ env._LATEST_BROWSER_TAG }}.zip
-          path: clients/browser-source/apps/browser/dist/dist-opera-mv3.zip
-          if-no-files-found: error
-
-      - name: Upload Chrome MV3 artifact
-        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
-        with:
-          name: dist-chrome-MV3-${{ env._LATEST_BROWSER_TAG }}.zip
-          path: clients/browser-source/apps/browser/dist/dist-chrome-mv3.zip
-          if-no-files-found: error
-
-      - name: Upload Chrome MV3 Beta artifact (DO NOT USE FOR PROD)
-        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
-        with:
-          name: DO-NOT-USE-FOR-PROD-dist-chrome-MV3-beta-${{ env._LATEST_BROWSER_TAG }}.zip
-          path: clients/browser-source/apps/browser/dist/dist-chrome-mv3-beta.zip
-          if-no-files-found: error
-
-      - name: Upload Firefox artifact
-        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
-        with:
-          name: dist-firefox-${{ env._LATEST_BROWSER_TAG }}.zip
-          path: clients/browser-source/apps/browser/dist/dist-firefox.zip
-          if-no-files-found: error
-
-      - name: Upload Firefox MV3 artifact (DO NOT USE FOR PROD)
-        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
-        with:
-          name: DO-NOT-USE-FOR-PROD-dist-firefox-MV3-${{ env._LATEST_BROWSER_TAG }}.zip
-          path: clients/browser-source/apps/browser/dist/dist-firefox-mv3.zip
-          if-no-files-found: error
-
-      - name: Upload Edge artifact
-        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
-        with:
-          name: dist-edge-${{ env._LATEST_BROWSER_TAG }}.zip
-          path: clients/browser-source/apps/browser/dist/dist-edge.zip
-          if-no-files-found: error
-
-      - name: Upload Edge MV3 artifact (DO NOT USE FOR PROD)
-        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
-        with:
-          name: DO-NOT-USE-FOR-PROD-dist-edge-MV3-${{ env._LATEST_BROWSER_TAG }}.zip
-          path: clients/browser-source/apps/browser/dist/dist-edge-mv3.zip
-          if-no-files-found: error
-
-      - name: Upload browser source
-        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
-        with:
-          name: browser-source-${{ env._LATEST_BROWSER_TAG }}.zip
-          path: clients/browser-source.zip
+          path: clients/browser-source/apps/browser/dist/dist-opera.zip
           if-no-files-found: error
 
       - name: Create release
